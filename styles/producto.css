@@ -1,0 +1,136 @@
+:root {
+    --fontHeadings: "Playfair Display", serif;
+    --fontBody: "Raleway", sans-serif;
+    --colorPrimario: #2b2d42;
+    --colorSecundario: #edf2f4 ;
+    --colorTerciario: #ef233c;
+}
+
+.productos {
+    padding-top: 200px;
+}
+
+@media screen and (min-width: 768px) {
+  .productos {
+    padding-top: 150px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+  }
+}
+
+.productos__imagen {
+    max-width: 100%;
+}
+
+.productos__texto {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+}
+
+.productos__titulo {
+    font-size: 28px;
+    color: var(--colorTerciario);
+    margin: 15px 0;
+    padding: 20px;
+    background-color: var(--colorPrimario);
+    color: var(--colorSecundario);
+    width: auto;
+}
+
+@media screen and (min-width: 768px) {
+    .productos__titulo {
+        font-size: 48px;
+    }
+}
+
+.productos__descripcion {
+    line-height: 1.5;
+    margin: 10px 0;
+    color: var(--colorPrimario);
+    font-weight: bold;
+}
+
+.productos__precio {
+    font-size: 24px;
+    margin: 10px 0;
+    color: var(--colorPrimario);
+}
+
+@media screen and (min-width: 768px) {
+    .productos__precio {
+        font-size: 36px;
+    }
+}
+
+.productos__agregar {
+    margin: 20px 0;
+    text-align: center;
+    color: var(--colorSecundario);
+    background-color: var(--colorTerciario);
+    font-size: 16px;
+    margin-top: 10px;
+    font-weight: bold;
+    transition: background-color 0.3s ease-in-out;
+    position: relative;
+    padding: 15px 55px;
+    margin: 20px auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+@media screen and (min-width: 768px) {
+    .productos__agregar {
+        margin: 20px 0;
+    }
+}
+
+.productos__agregar:hover {
+    color: var(--colorSecundario);
+    background-color: var(--colorPrimario);
+}
+
+.productos__agregar::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background-color: var(--colorSecundario);
+    bottom: 0;
+    left: 50%;
+    transition: width 0.4s, left 0.4s;
+}
+
+.productos__agregar:hover::after {
+    width: 100%;
+    left: 0;
+}
+
+.productos__agregar-icono {
+    filter: invert(1);
+    width: 15px;
+}
+
+.productos__atras {
+    display: flex;
+    gap: 10px;
+    padding: 10px 25px;
+    background-color: var(--colorPrimario);
+    color: var(--colorSecundario);
+    margin: 20px 0 40px 0;
+    transition: .6s all;
+    border: 3px solid var(--colorPrimario);
+    font-weight: bold;
+}
+
+.productos__atras-img {
+    width: 15px;
+    filter: invert(1);
+}
+
+.productos__atras:hover {
+    transform: translateX(-3px);
+}

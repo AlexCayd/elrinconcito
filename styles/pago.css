@@ -1,0 +1,144 @@
+:root {
+    --fontHeadings: "Playfair Display", serif;
+    --fontBody: "Raleway", sans-serif;
+    --colorPrimario: #2b2d42;
+    --colorSecundario: #edf2f4 ;
+    --colorTerciario: #ef233c;
+}
+
+.pago {
+    padding-top: 200px;
+}
+
+@media screen and (min-width: 768px) {
+  .pago {
+    padding-top: 150px;
+  }
+}
+
+.pago__titulo {
+    font-size: 28px;
+    color: var(--colorPrimario);
+}
+
+@media screen and (min-width: 768px) {
+    .pago__titulo {
+        font-size: 48px;
+    }
+}
+
+.pago__titulo:hover::after {
+    transform: scaleX(1); 
+    transform-origin: bottom left; 
+}
+
+.pago__contenedor {
+    display: grid;
+    grid-template-columns: repeat(1fr);
+    gap: 30px;
+    margin-top: 40px;
+}
+
+@media screen and (min-width: 768px) {
+    .pago__contenedor {
+        grid-template-columns: 4fr 2fr;
+    }
+}
+
+.resumen__imagen {
+    width: 150px;
+}
+
+.resumen__productos {
+    text-align: center;
+}
+
+.resumen__encabezado th {
+    padding: 15px;
+    color: var(--colorPrimario);
+}
+
+.confirmacion {
+    background-color: var(--colorPrimario);
+    color: var(--colorSecundario);
+    min-height: 500px;
+}
+
+.confirmacion__mapa {
+    padding: 20px 20px 0 20px;
+}
+
+.confirmacion__mapa-contenedor {
+    max-width: 100%;
+}
+
+.confirmacion__mapa iframe {
+    width: 100%;
+    height: 200px;
+}
+
+.confirmacion__subtitulo {
+    margin: 15px 0;
+    font-size: 24px;
+}
+
+.confirmacion__direcion {
+    font-size: 16px;
+}
+
+.confirmacion__metodopago {
+    padding: 0 20px;
+    margin-bottom: 30px;
+}
+
+.confirmacion__confirmar {
+    margin: 20px auto; 
+    display: block; 
+    color: var(--colorSecundario);
+    background-color: var(--colorTerciario);
+    font-weight: bold;
+    padding: 15px 65px;
+    text-align: center; 
+    transition: .5s all;
+    max-width: 100%;
+}
+
+@media screen and (min-width: 768px) {
+    .confirmacion__confirmar {
+        width: max-content; 
+    }
+}
+
+.confirmacion__confirmar::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background-color: var(--colorTerciario);
+    bottom: 0;
+    left: 50%;
+    transition: width 0.4s, left 0.4s;
+    position: relative;
+}
+
+.confirmacion__confirmar:hover {
+    color: var(--colorPrimario);
+    background-color: var(--colorSecundario);
+}
+
+.confirmacion__confirmar:hover::after {
+    width: 100%;
+    left: 0;
+}
+
+.confirmacion__boton {
+    padding: 20px 20px;
+    padding-top: 0;
+}
+
+.total {
+    display: block;
+    margin: 20px 0;
+    font-size: 28px;
+    color: var(--colorPrimario);
+}
