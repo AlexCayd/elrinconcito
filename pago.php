@@ -1,21 +1,32 @@
+<?php
+
+require './includes/funciones.php';
+$auth = estaAutenticado();
+
+if(!$auth) {
+    header('Location: /programacion-internet/elrinconcito');
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El Rinconcito | Mi Perfil</title>
+    <title>El Rinconcito | Confirmación de pedido</title>
     <link rel="stylesheet" href="styles/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles/registrarse.css">
+    <link rel="stylesheet" href="styles/pago.css">
 </head>
 <body>
     <header class="header">
         <div class="header__contenedor">
             <h2 class="header__logo">El Rinconcito</h2>
             <div class="header__iconos">
-                <a href="index.html" class="header__icono">
+                <a href="index.php" class="header__icono">
                     <div class="header__iconos-container">
                         <img class="header__iconos-img" src="img/header/home.svg" alt="Inicio">
                         <p class="header__iconos-descripcion">Home</p>
@@ -28,7 +39,7 @@
                         <p class="header__iconos-descripcion">Carrito</p>
                     </div>
                 </div>
-                <a href="micuenta.html" class="header__icono">
+                <a href="micuenta.php" class="header__icono">
                     <div class="header__iconos-container">
                         <img class="header__iconos-img" src="img/header/user.svg" alt="Perfil">
                         <p class="header__iconos-descripcion">Mi Cuenta</p>
@@ -95,58 +106,81 @@
             </div>
             
             <h2 class="carrito__total">Total: <span class="carrito__total-num">$1699.00</span> </h2>
-            <a href="pago.html" class="carrito__pago">Continuar al pago</a>
+            <a href="pago.php" class="carrito__pago">Continuar al pago</a>
             <a href="#" id="vaciar-carrito" class="carrito__vaciar">Vaciar Carrito</a>
         </div>
     </div>
 
-    <main class="registrarse contenedor">
-        <h2 class="registrarse__titulo">Registrarse</h2>
-        <form action="index.html" class="registrarse__formulario">
-            <div class="registrarse__campos">
-                <div class="registrarse__campo">
-                    <label class="registrarse__label">Nombre</label>
-                    <input type="text" class="registrarse__input" id="registrarse__nombre" placeholder="Nombre">
-                </div>
-                <div class="registrarse__campo">
-                    <label class="registrarse__label">Apellidos</label>
-                    <input type="text" class="registrarse__input" id="registrarse__apellidos" placeholder="Apellidos">
-                </div>
-                <div class="registrarse__campo">
-                    <label class="registrarse__label">Fecha de nacimiento</label>
-                    <input type="date" class="registrarse__input" id="registrarse__nacimiento">
-                </div>
-                <div class="registrarse__campo">
-                    <label class="registrarse__label">Correo electrónico</label>
-                    <input type="email" class="registrarse__input" id="registrarse__email" placeholder="Correo electrónico">
-                </div>
-                <div class="registrarse__campo">
-                    <label class="registrarse__label">Contraseña</label>
-                    <input type="password" class="registrarse__input" id="registrarse__password" placeholder="Contraseña">
-                </div>
-                <div class="registrarse__campo">
-                    <label class="registrarse__label">Confirmar contraseña</label>
-                    <input type="password" class="registrarse__input" id="registrarse__confirmpassword" placeholder="Contraseña">
-                </div>
-                <div class="registrarse__campo">
-                    <label class="registrarse__label">Número de tarjeta bancaria</label>
-                    <input type="text" class="registrarse__input" id="registrarse__tarjeta" placeholder="1234-5678-1234-5678">
-                </div>
-                <div class="registrarse__campo">
-                    <label class="registrarse__label">Dirección postal</label>
-                    <input type="text" class="registrarse__input" id="registrarse__dirección" placeholder="Dirección">
-                </div>
-            </div>
+    <main class="pago contenedor">
+        <h2 class="pago__titulo">Resumen</h2>
 
-            <div id="alerta" class="alerta">
-                Hola
+        <h3 class="total">Total: <span class="total__num">$2426.00</span> </h3>
+        <div class="pago__contenedor">
+            <table class="resumen">
+                <thead class="resumen__encabezado">
+                    <tr>
+                        <th>Imagen</th>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                    </tr>
+                </thead>
+    
+                <tbody class="resumen__productos">
+                    <tr>
+                        <td>
+                            <img src="img/productos/vino1.webp" class="resumen__imagen" alt="Imagen de producto">
+                        </td>
+                        <td>Vino Tinto Cabernet Sauvignon (Reserva)</td>
+                        <td>1</td>
+                        <td>$999.00</td>
+                    </tr>
+    
+                    <tr>
+                        <td>
+                            <img src="img/productos/aceite1.webp" class="resumen__imagen" alt="Imagen de producto">
+                        </td>
+                        <td>Aceite de Oliva Extra Virgen Italiano</td>
+                        <td>2</td>
+                        <td>$389.00</td>
+                    </tr>
+    
+                    <tr>
+                        <td>
+                            <img src="img/productos/carne1.webp" class="resumen__imagen" alt="Imagen de producto">
+                        </td>
+                        <td>Jamón Ibérico de Bellota</td>
+                        <td>1</td>
+                        <td>$649.00</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+
+            <div class="confirmacion">
+                <h2 class="confirmacion__titulo">Datos de pago</h2>
+                <img src="img/iconos/user.svg" alt="Imagen de usuario" class="pago__img">
+                <div class="confirmacion__mapa">
+                    <h3 class="confirmacion__subtitulo">Nombre</h3>
+                    <p class="confirmacion__direcion"><?php echo $_SESSION['nombre']; ?></p>
+                    <h3 class="confirmacion__subtitulo">Dirección de entrega</h3>
+                    <p class="confirmacion__direcion"><?php echo $_SESSION['direccion']; ?></p>
+                </div>
+                <div class="confirmacion__metodopago">
+                    <h3 class="confirmacion__subtitulo">Método de pago</h3>
+                    <div class="confirmacion__tarjeta">
+                        <p class="confirmacion__tarjeta-numeros"><?php echo $_SESSION['tarjeta_bancaria']; ?></p>
+                    </div>
+                </div>
+                <div class="confirmacion__boton">
+                    <a href="#" class="confirmacion__confirmar">Confirmar pedido</a>
+                </div>
             </div>
-            <input class="registrarse__submit" type="submit" value="Crear mi cuenta">
-        </form>
+        </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/carrito.js"></script>
-    <script src="js/registrarse.js"></script>
+    <script src="js/iniciosesion.js"></script>
 </body>
 </html>

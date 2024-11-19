@@ -1,21 +1,41 @@
+<?php
+    // Importar la conexión
+    require './includes/config/database.php';
+    $db = conectarDB();
+
+    $id = $_GET['id'] ?? null;
+    $id = filter_var($id, FILTER_VALIDATE_INT);
+
+    if (!$id) {
+        header('Location: index.php'); 
+        exit;
+    }
+
+    // Consultar los datos del producto
+    $query = "SELECT * FROM productos WHERE id_producto = ${id};";
+    $resultado = mysqli_query($db, $query);
+    $producto = mysqli_fetch_assoc($resultado);
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El Rinconcito | Mi Perfii</title>
+    <title>El Rinconcito</title>
     <link rel="stylesheet" href="styles/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles/pago.css">
+    <link rel="stylesheet" href="styles/producto.css">
 </head>
 <body>
     <header class="header">
         <div class="header__contenedor">
             <h2 class="header__logo">El Rinconcito</h2>
             <div class="header__iconos">
-                <a href="index.html" class="header__icono">
+                <a href="index.php" class="header__icono">
                     <div class="header__iconos-container">
                         <img class="header__iconos-img" src="img/header/home.svg" alt="Inicio">
                         <p class="header__iconos-descripcion">Home</p>
@@ -28,7 +48,7 @@
                         <p class="header__iconos-descripcion">Carrito</p>
                     </div>
                 </div>
-                <a href="micuenta.html" class="header__icono">
+                <a href="micuenta.php" class="header__icono">
                     <div class="header__iconos-container">
                         <img class="header__iconos-img" src="img/header/user.svg" alt="Perfil">
                         <p class="header__iconos-descripcion">Mi Cuenta</p>
@@ -37,7 +57,7 @@
             </div>
         </div>
     </header>
-
+    
     <div class="sidebar" id="cartSidebar">
         <div class="sidebar__contenido">
             <div class="sidebar__flex">
@@ -95,82 +115,34 @@
             </div>
             
             <h2 class="carrito__total">Total: <span class="carrito__total-num">$1699.00</span> </h2>
-            <a href="pago.html" class="carrito__pago">Continuar al pago</a>
+            <a href="pago.php" class="carrito__pago">Continuar al pago</a>
             <a href="#" id="vaciar-carrito" class="carrito__vaciar">Vaciar Carrito</a>
         </div>
     </div>
 
-    <main class="pago contenedor">
-        <h2 class="pago__titulo">Resumen</h2>
+    <main class="productos contenedor">
+        <img src="imagenesServidor/<?php echo $producto['imagen'] ?>" alt="Imagen de productos" class="productos__imagen">
 
-        <h3 class="total">Total: <span class="total__num">$2426.00</span> </h3>
-        <div class="pago__contenedor">
-            <table class="resumen">
-                <thead class="resumen__encabezado">
-                    <tr>
-                        <th>Imagen</th>
-                        <th>Producto</th>
-                        <th>Cantidad</th>
-                        <th>Precio</th>
-                    </tr>
-                </thead>
-    
-                <tbody class="resumen__productos">
-                    <tr>
-                        <td>
-                            <img src="img/productos/vino1.webp" class="resumen__imagen" alt="Imagen de producto">
-                        </td>
-                        <td>Vino Tinto Cabernet Sauvignon (Reserva)</td>
-                        <td>1</td>
-                        <td>$999.00</td>
-                    </tr>
-    
-                    <tr>
-                        <td>
-                            <img src="img/productos/aceite1.webp" class="resumen__imagen" alt="Imagen de producto">
-                        </td>
-                        <td>Aceite de Oliva Extra Virgen Italiano</td>
-                        <td>2</td>
-                        <td>$389.00</td>
-                    </tr>
-    
-                    <tr>
-                        <td>
-                            <img src="img/productos/carne1.webp" class="resumen__imagen" alt="Imagen de producto">
-                        </td>
-                        <td>Jamón Ibérico de Bellota</td>
-                        <td>1</td>
-                        <td>$649.00</td>
-                    </tr>
-                    
-                </tbody>
-            </table>
-
-            <div class="confirmacion">
-                <div class="confirmacion__mapa">
-                    <div class="confirmacion__mapa-contenedor">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.621241806972!2d-99.19470822415634!3d19.428764340802232!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d201ffa3ac578f%3A0xe74f5a3c3140baaa!2sTem%C3%ADstocles%2021%2C%20Polanco%2C%20Polanco%20IV%20Secc%2C%20Miguel%20Hidalgo%2C%2011550%20Ciudad%20de%20M%C3%A9xico%2C%20CDMX!5e0!3m2!1ses-419!2smx!4v1731286663970!5m2!1ses-419!2smx" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    </div>
-                    <h3 class="confirmacion__subtitulo">Nombre</h3>
-                    <p class="confirmacion__direcion">José Alfonso Rodríguez Román</p>
-                    <h3 class="confirmacion__subtitulo">Dirección de entrega</h3>
-                    <p class="confirmacion__direcion">Temístocles 21, Polanco, Polanco IV Secc, Miguel Hidalgo, 11550 Ciudad de México, CDMX</p>
-                </div>
-                <div class="confirmacion__metodopago">
-                    <h3 class="confirmacion__subtitulo">Método de pago</h3>
-                    <div class="confirmacion__tarjeta">
-                        <p class="confirmacion__tarjeta-numeros">1234-5678-1234-5678</p>
-                    </div>
-                </div>
-                <div class="confirmacion__boton">
-                    <a href="#" class="confirmacion__confirmar">Confirmar pedido</a>
-                </div>
-            </div>
+        <div class="productos__texto">
+            <a href="index.php" class="productos__atras">
+                <img class="productos__atras-img" src="img/iconos/atras.svg" alt="Flecha atrás">
+                Volver
+            </a>
+            <h2 class="productos__titulo"><?php echo $producto['nombre']; ?></h2>
+            <h3 class="productos__precio">$<?php echo $producto['precio']; ?></h3>
+            <p class="productos__descripcion"><?php echo $producto['descripcion']; ?></p>
+            <a href="#" class="productos__agregar">
+                Agregar al Carrito
+                <img src="img/iconos/agregar.svg" alt="Agregar" class="productos__agregar-icono">
+            </a>
         </div>
     </main>
 
+    <footer class="footer">
+        <p class="footer__descripcion">El Rinconcito &copy;. Todos los derechos reservados 2024</p>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/carrito.js"></script>
-    <script src="js/iniciosesion.js"></script>
 </body>
 </html>

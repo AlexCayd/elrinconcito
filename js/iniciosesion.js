@@ -9,13 +9,7 @@ submitButton.classList.add('disabled');
 emailInput.addEventListener('input', validarFormulario);
 passwordInput.addEventListener('input', validarFormulario);
 
-form.addEventListener('submit', (event) => {
-    event.preventDefault(); 
-
-});
-
 function validarFormulario() {
-
     if(emailInput.value !== '' && passwordInput.value.length > 0) {
         submitButton.classList.remove('disabled');
     }

@@ -1,3 +1,64 @@
+<?php
+    require './includes/funciones.php';
+    $auth = estaAutenticado();
+
+    $errores = [];
+    $mensajeSweetAlert = ''; 
+
+    // Importar la conexión
+    require './includes/config/database.php';
+    $db = conectarDB();
+
+// Autenticar al usuario
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = mysqli_real_escape_string($db, filter_var($_POST['email'], FILTER_VALIDATE_EMAIL));
+    $password = mysqli_real_escape_string($db, $_POST['password']);
+
+    if (!$email) {
+        $errores[] = "El email es obligatorio o no es válido";
+    }
+
+    if (!$password) {
+        $errores[] = "El password es obligatorio o no es válido";
+    }
+
+    if (empty($errores)) {
+        // Revisar si el usuario existe
+        $query = "SELECT * FROM usuarios WHERE email = '${email}';";
+        $resultado = mysqli_query($db, $query);
+
+        if ($resultado->num_rows) {
+            // Revisar si el password es correcto
+            $usuario = mysqli_fetch_assoc($resultado);
+            $auth = password_verify($password, $usuario['password']);
+
+            if ($auth) {
+                // El usuario está autenticado
+                if (session_status() === PHP_SESSION_NONE) {
+                    session_start();
+                }
+
+                // Llenar el arreglo de la sesión
+                $_SESSION['nombre'] = $usuario['nombre'];
+                $_SESSION['email'] = $usuario['email'];
+                $_SESSION['f_nacimiento'] = $usuario['f_nacimiento'];
+                $_SESSION['direccion'] = $usuario['direccion'];
+                $_SESSION['tarjeta_bancaria'] = $usuario['tarjeta_bancaria'];
+                $_SESSION['login'] = true;
+
+                $mensajeSweetAlert = "Bienvenido de vuelta, {$_SESSION['nombre']}!";
+            } else {
+                $errores[] = "La contraseña es incorrecta!";
+            }
+        } else {
+            $errores[] = "El usuario no existe!";
+        }
+    }
+}
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +76,7 @@
         <div class="header__contenedor">
             <h2 class="header__logo">El Rinconcito</h2>
             <div class="header__iconos">
-                <a href="index.html" class="header__icono">
+                <a href="index.php" class="header__icono">
                     <div class="header__iconos-container">
                         <img class="header__iconos-img" src="img/header/home.svg" alt="Inicio">
                         <p class="header__iconos-descripcion">Home</p>
@@ -24,20 +85,31 @@
                 <div class="header__icono" id="cartIcon">
                     <div class="header__iconos-container">
                         <img class="header__iconos-img" src="img/header/cart.svg" alt="Carrito">
-                        <span class="header__iconos-marcador">2</span>
+                        <span class="header__iconos-marcador">0</span>
                         <p class="header__iconos-descripcion">Carrito</p>
                     </div>
                 </div>
-                <a href="micuenta.html" class="header__icono">
-                    <div class="header__iconos-container">
-                        <img class="header__iconos-img" src="img/header/user.svg" alt="Perfil">
-                        <p class="header__iconos-descripcion">Mi Cuenta</p>
-                    </div>
-                </a>
+                <?php 
+                    if (!$auth) {
+                        echo '<a href="micuenta.php" class="header__icono">
+                                <div class="header__iconos-container">
+                                    <img class="header__iconos-img" src="img/header/user.svg" alt="Perfil">
+                                    <p class="header__iconos-descripcion">Iniciar Sesión</p>
+                                </div>
+                            </a>';
+                    } else {
+                        echo '<a href="perfil.php" class="header__icono">
+                                <div class="header__iconos-container">
+                                    <img class="header__iconos-img" src="img/header/user.svg" alt="Perfil">
+                                    <p class="header__iconos-descripcion">Mi Perfil</p>
+                                </div>
+                            </a>';
+                    }
+                ?>
             </div>
         </div>
     </header>
-
+    
     <div class="sidebar" id="cartSidebar">
         <div class="sidebar__contenido">
             <div class="sidebar__flex">
@@ -95,26 +167,32 @@
             </div>
             
             <h2 class="carrito__total">Total: <span class="carrito__total-num">$1699.00</span> </h2>
-            <a href="pago.html" class="carrito__pago">Continuar al pago</a>
+            <a href="pago.php" class="carrito__pago">Continuar al pago</a>
             <a href="#" id="vaciar-carrito" class="carrito__vaciar">Vaciar Carrito</a>
         </div>
     </div>
 
     <main class="registrarse contenedor">
         <h2 class="registrarse__titulo">Iniciar Sesión</h2>
-        <form action="index.html" class="registrarse__formulario">
+        <form method="POST" class="registrarse__formulario">
             <div class="registrarse__campos">
                 <div class="registrarse__campo">
                     <label class="registrarse__label">Correo electrónico</label>
-                    <input type="email" class="registrarse__input" id="registrarse-email" placeholder="Correo electrónico" required>
+                    <input name="email" type="email" class="registrarse__input" id="registrarse-email" placeholder="Correo electrónico" required>
                 </div>
                 <div class="registrarse__campo">
                     <label class="registrarse__label">Contraseña</label>
-                    <input type="password" class="registrarse__input" id="registrarse-password" placeholder="Contraseña" required>
+                    <input name="password" type="password" class="registrarse__input" id="registrarse-password" placeholder="Contraseña" required>
                 </div>
             </div>
 
-            <a href="registrarse.html" class="registrarse__crear">¿No tienes una cuenta? Regístrate</a>
+            
+            <?php foreach($errores as $error): ?>
+                <div class="alerta">
+                    <?php echo $error; ?>
+                </div>
+                <?php endforeach; ?>
+            <a href="registrarse.php" class="registrarse__crear">¿No tienes una cuenta? Regístrate</a>
             <input class="registrarse__submit" type="submit" value="Iniciar Sesión">
         </form>
     </main>
@@ -122,5 +200,18 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/carrito.js"></script>
     <script src="js/iniciosesion.js"></script>
+    <script>
+        <?php if (!empty($mensajeSweetAlert)): ?>
+        Swal.fire({
+            title: '¡Autenticación exitosa!',
+            text: "<?php echo $mensajeSweetAlert; ?>",
+            icon: 'success',
+            confirmButtonColor: '#2b2d42',
+            confirmButtonText: 'Continuar'
+        }).then(() => {
+            window.location.href = '/programacion-internet/elrinconcito/';
+        });
+        <?php endif; ?>
+    </script>
 </body>
 </html>

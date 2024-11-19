@@ -53,6 +53,18 @@ button {
     padding: 40px 0;
 }
 
+.btn {
+    padding: 15px 45px;
+    color: var(--colorSecundario);
+    background-color: var(--colorPrimario);
+    font-weight: bold;
+    transition: 0.4s all;
+}
+
+.btn:hover {
+    background-color: var(--colorTerciario);
+}
+
 .header {
     margin: 0 auto;
     background-color: var(--colorPrimario);
@@ -446,15 +458,24 @@ button {
 
 .producto__precio {
     font-size: 28px;
+    margin: -15px 0 10px 0;
 }
 
 .producto__titulo {
     font-size: 18px;
     margin: 10px 0;
     position: relative;
-    padding: 10px;
+    padding: 10px 15px;
     background-color: var(--colorTerciario);
     color: var(--colorSecundario);
+}
+
+@media screen and (min-width: 768px) {
+    .producto__titulo {
+        min-height: 50px;
+        display: flex;
+        align-items: center;
+    }
 }
 
 .producto__descripcion {
@@ -561,4 +582,9 @@ button {
     padding: 15px;
     color: var(--colorSecundario);
     font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.agregar__imagen-previsualizacion {
+    width: 100px;
 }

@@ -1,0 +1,147 @@
+:root {
+    --fontHeadings: "Playfair Display", serif;
+    --fontBody: "Raleway", sans-serif;
+    --colorPrimario: #2b2d42;
+    --colorSecundario: #edf2f4 ;
+    --colorTerciario: #ef233c;
+}
+
+.perfil {
+    padding-top: 200px;
+    min-height: 70vh;
+}
+
+@media screen and (min-width: 768px) {
+  .perfil {
+    padding-top: 150px;
+  }
+}
+
+.perfil__titulo {
+    font-size: 28px;
+    color: var(--colorPrimario);
+}
+
+@media screen and (min-width: 768px) {
+    .perfil__titulo {
+        font-size: 48px;
+    }
+}
+
+.perfil__titulo:hover::after {
+    transform: scaleX(1); 
+    transform-origin: bottom left; 
+}
+
+.perfil__grid {
+    margin-top: 25px;
+    display: grid;
+    gap: 30px;
+    grid-template-columns: repeat(1, 1fr);
+}
+
+@media screen and (min-width: 768px) {
+    .perfil__grid {
+        grid-template-columns: 3fr 7fr; 
+    }
+}
+
+.perfil__img {
+    width: 40px;
+    filter: invert(1);
+}
+
+.perfil__info {
+    background-color: var(--colorPrimario);
+    color: var(--colorSecundario);
+    padding: 30px;
+}
+
+.perfil__usuario {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding-bottom: 30px;
+    border-bottom: 3px solid var(--colorSecundario);
+}
+
+.usuario__campo {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--colorSecundario);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    justify-content: space-between;
+}
+
+
+
+.usuario__tag--data {
+    text-align: left;
+    font-weight: bold;
+}
+
+.usuario__cerrar {
+    margin-top: 35px;
+    border: none;
+    background-color: var(--colorTerciario);
+    color: var(--colorSecundario);
+    font-family: inherit;
+    width: 100%;
+    font-weight: bold;
+    padding: 15px;
+    font-size: 16px;
+    border: 3px solid var(--colorTerciario);
+    cursor: pointer;
+    transition: 0.4s all;
+}
+
+.usuario__cerrar:hover {
+    background-color: var(--colorPrimario);
+    color: var(--colorSecundario);
+}
+
+.historialu__titulo {
+    font-size: 32px;
+    color: var(--colorPrimario);
+    padding: 20px 0;
+    margin-bottom: 20px;
+    display: block;
+    text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+    .historialu__titulo {
+        text-align: left;
+    }
+}
+
+.hcompra {
+    display: grid;
+    grid-template-columns: 1fr 1fr 3fr;
+    justify-content: space-between;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--colorPrimario);
+    color: var(--colorSecundario);
+    font-weight: bold;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+.hcompra__img {
+    width: 130px;
+    margin: 0 auto;
+}
+
+.hcompra__id, .hcompra__producto {
+    font-size: 14px;
+}
+
+@media screen and (min-width: 768px) {
+    .hcompra__id, .hcompra__producto {
+        font-size: 16px;
+    }
+}

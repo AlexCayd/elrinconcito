@@ -62,9 +62,6 @@
     background-color: var(--colorPrimario);
     color: var(--colorSecundario);
     min-height: 500px;
-}
-
-.confirmacion__mapa {
     padding: 20px 20px 0 20px;
 }
 
@@ -77,6 +74,21 @@
     height: 200px;
 }
 
+.pago__img {
+    width: 40px;
+    filter: invert(1);
+    margin: 20px auto 0 auto;
+    display: block;
+}
+
+.confirmacion__titulo {
+    padding: 15px 0;
+    text-align: center;
+    border-bottom: 3px solid var(--colorSecundario);
+    display: block;
+    font-size: 28px;
+}
+
 .confirmacion__subtitulo {
     margin: 15px 0;
     font-size: 24px;
@@ -87,7 +99,6 @@
 }
 
 .confirmacion__metodopago {
-    padding: 0 20px;
     margin-bottom: 30px;
 }
 
