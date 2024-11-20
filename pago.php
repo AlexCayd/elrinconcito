@@ -1,10 +1,36 @@
 <?php
+// Importar la conexión
+require './includes/config/database.php';
+$db = conectarDB();
 
 require './includes/funciones.php';
 $auth = estaAutenticado();
 
 if(!$auth) {
     header('Location: /programacion-internet/elrinconcito');
+} else {
+    $id_usuario = $_SESSION['id_usuario'];
+}
+
+// Consultar los productos del carrito
+$query_carrito = "
+    SELECT 
+        carrito.cantidad, 
+        productos.nombre, 
+        productos.precio, 
+        productos.imagen 
+    FROM 
+        elrinconcito.carrito 
+    INNER JOIN 
+        elrinconcito.productos 
+    ON 
+        carrito.producto = productos.id_producto 
+    WHERE 
+        carrito.usuario = $id_usuario";
+$resultado_carrito = mysqli_query($db, $query_carrito);
+
+if (!$resultado_carrito) {
+    die("Error al consultar el carrito: " . mysqli_error($db));
 }
 
 ?>
@@ -116,46 +142,29 @@ if(!$auth) {
 
         <h3 class="total">Total: <span class="total__num">$2426.00</span> </h3>
         <div class="pago__contenedor">
-            <table class="resumen">
-                <thead class="resumen__encabezado">
-                    <tr>
-                        <th>Imagen</th>
-                        <th>Producto</th>
-                        <th>Cantidad</th>
-                        <th>Precio</th>
-                    </tr>
-                </thead>
-    
-                <tbody class="resumen__productos">
-                    <tr>
-                        <td>
-                            <img src="img/productos/vino1.webp" class="resumen__imagen" alt="Imagen de producto">
-                        </td>
-                        <td>Vino Tinto Cabernet Sauvignon (Reserva)</td>
-                        <td>1</td>
-                        <td>$999.00</td>
-                    </tr>
-    
+        <table class="resumen">
+            <thead class="resumen__encabezado">
+                <tr>
+                    <th>Imagen</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                </tr>
+            </thead>
+            <tbody class="resumen__productos">
+                <?php while ($producto = mysqli_fetch_assoc($resultado_carrito)) : ?>
                     <tr>
                         <td>
-                            <img src="img/productos/aceite1.webp" class="resumen__imagen" alt="Imagen de producto">
+                            <img src="imagenesServidor/<?php echo $producto['imagen']; ?>" class="resumen__imagen" alt="Imagen de producto">
                         </td>
-                        <td>Aceite de Oliva Extra Virgen Italiano</td>
-                        <td>2</td>
-                        <td>$389.00</td>
+                        <td><?php echo $producto['nombre']; ?></td>
+                        <td><?php echo $producto['cantidad']; ?></td>
+                        <td>$<?php echo number_format($producto['precio'], 2); ?></td>
                     </tr>
-    
-                    <tr>
-                        <td>
-                            <img src="img/productos/carne1.webp" class="resumen__imagen" alt="Imagen de producto">
-                        </td>
-                        <td>Jamón Ibérico de Bellota</td>
-                        <td>1</td>
-                        <td>$649.00</td>
-                    </tr>
-                    
-                </tbody>
-            </table>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+
 
             <div class="confirmacion">
                 <h2 class="confirmacion__titulo">Datos de pago</h2>

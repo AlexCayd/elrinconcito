@@ -57,8 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     cancelButtonText: 'Cancelar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        producto.remove(); // Eliminar el producto del DOM
-                        actualizarCarrito(); // Actualizar el carrito después de la eliminación
+                        producto.remove(); 
+                        actualizarCarrito(); 
                         Swal.fire({
                             position: 'center',
                             icon: 'success',
@@ -83,30 +83,33 @@ document.addEventListener('DOMContentLoaded', () => {
             actualizarCarrito();
         });
     });
+});
 
-    document.querySelector('#vaciar-carrito').addEventListener('click', () => {
-        Swal.fire({
-            position: 'center',
-            icon: 'warning',
-            title: '¿En serio quieres vaciar el carrito?',
-            showConfirmButton: true,
-            showCancelButton: true,
-            confirmButtonColor: '#ef233c',
-            cancelButtonColor: '#2b2d42',
-            confirmButtonText: 'Sí, vaciar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.querySelector('.carrito__productos').innerHTML = ''; 
-                actualizarCarrito(); 
-                Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Carrito vaciado',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            }
+document.addEventListener('DOMContentLoaded', () => {
+    const botonesMas = document.querySelectorAll('.carrito__mas');
+
+    botonesMas.forEach((boton) => {
+        boton.addEventListener('click', () => {
+            const productoElemento = boton.closest('.carrito__producto');
+            const productoId = productoElemento.dataset.id;
+            const cantidadElemento = productoElemento.querySelector('.carrito__cantidad');
+
+            // Enviar solicitud al backend para incrementar la cantidad
+            fetch('actualizar_carrito.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `id_producto=${productoId}`
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const cantidadActual = parseInt(cantidadElemento.textContent, 10);
+                        cantidadElemento.textContent = cantidadActual + 1;
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
         });
     });
 });

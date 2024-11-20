@@ -39,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 // Llenar el arreglo de la sesión
+                $_SESSION['id_usuario'] = $usuario['id_usuario'];
                 $_SESSION['nombre'] = $usuario['nombre'];
                 $_SESSION['email'] = $usuario['email'];
                 $_SESSION['f_nacimiento'] = $usuario['f_nacimiento'];

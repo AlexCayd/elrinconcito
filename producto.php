@@ -131,7 +131,7 @@
             <h2 class="productos__titulo"><?php echo $producto['nombre']; ?></h2>
             <h3 class="productos__precio">$<?php echo $producto['precio']; ?></h3>
             <p class="productos__descripcion"><?php echo $producto['descripcion']; ?></p>
-            <a href="#" class="productos__agregar">
+            <a href="agregar_carrito.php?id=<?php echo $producto['id_producto']; ?>" class="productos__agregar">
                 Agregar al Carrito
                 <img src="img/iconos/agregar.svg" alt="Agregar" class="productos__agregar-icono">
             </a>
