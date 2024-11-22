@@ -13,24 +13,6 @@ const alerta = document.getElementById('alerta')
 
 // submitButton.classList.add('disabled');
 
-form.addEventListener('submit', (event) => {
-    event.preventDefault();
-    validarFormulario() 
-    resultado = validarFormulario()
-    if (resultado === 1) {
-        Swal.fire({
-            position: 'center',
-            icon: 'success',
-            title: 'Creaste tu cuenta con éxito',
-            showConfirmButton: true,
-            confirmButtonColor: "#2b2d42"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = form.action;
-            }
-        });
-    } 
-});
 
 
 function validarFormulario() {

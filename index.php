@@ -18,10 +18,11 @@
         $id_usuario = $_SESSION['id_usuario'];
 
         $query_carrito = "
-            SELECT c.cantidad, p.nombre, p.precio, p.imagen 
-            FROM carrito c 
-            INNER JOIN productos p ON c.producto = p.id_producto 
-            WHERE c.usuario = $id_usuario";
+        SELECT c.cantidad, p.nombre, p.precio, p.imagen, p.id_producto 
+        FROM carrito c 
+        INNER JOIN productos p ON c.producto = p.id_producto 
+        WHERE c.usuario = $id_usuario";
+    
         $resultado_carrito = mysqli_query($db, $query_carrito);
 
         if (!$resultado_carrito) {
@@ -33,6 +34,19 @@
             $total += $producto['precio'] * $producto['cantidad'];
         }
     }
+
+    $total_items = 0;
+
+    if ($auth) {
+        $query_total_items = "SELECT SUM(cantidad) AS total_items FROM carrito WHERE usuario = $id_usuario";
+        $resultado_total_items = mysqli_query($db, $query_total_items);
+
+        if ($resultado_total_items) {
+            $row = mysqli_fetch_assoc($resultado_total_items);
+            $total_items = $row['total_items'] ?? 0;
+        }
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -60,7 +74,7 @@
                 <div class="header__icono" id="cartIcon">
                     <div class="header__iconos-container">
                         <img class="header__iconos-img" src="img/header/cart.svg" alt="Carrito">
-                        <span class="header__iconos-marcador">0</span>
+                        <span class="header__iconos-marcador"><?php echo $total_items; ?></span>
                         <p class="header__iconos-descripcion">Carrito</p>
                     </div>
                 </div>
@@ -94,21 +108,21 @@
             <div class="carrito__productos">
                 <?php if (count($productos_carrito) > 0): ?>
                     <?php foreach ($productos_carrito as $producto): ?>
-                        <div class="carrito__producto">
-                            <img src="imagenesServidor/<?php echo $producto['imagen']; ?>" alt="Imagen del producto" class="carrito__imagen">
-                            <div class="carrito__contenido">
-                                <div class="carrito__texto">
-                                    <h3 class="carrito__titulo"><?php echo $producto['nombre']; ?></h3>
-                                    <h3 class="carrito__precio">$<?php echo number_format($producto['precio'], 2); ?></h3>
-                                </div>
-                                <div class="carrito__controlador">
-                                    <h3 class="carrito__menos">-</h3>
-                                    <h3 class="carrito__cantidad"><?php echo $producto['cantidad']; ?></h3>
-                                    <h3 class="carrito__mas">+</h3>
-                                </div>
-                            </div>
+                    <div class="carrito__producto" data-id="<?php echo $producto['id_producto']; ?>">
+                    <img src="imagenesServidor/<?php echo $producto['imagen']; ?>" alt="Imagen del producto" class="carrito__imagen">
+                    <div class="carrito__contenido">
+                        <div class="carrito__texto">
+                            <h3 class="carrito__titulo"><?php echo $producto['nombre']; ?></h3>
+                            <h3 class="carrito__precio">$<?php echo number_format($producto['precio'], 2); ?></h3>
                         </div>
-                    <?php endforeach; ?>
+                        <div class="carrito__controlador">
+                            <h3 class="carrito__menos">-</h3>
+                            <h3 class="carrito__cantidad"><?php echo $producto['cantidad']; ?></h3>
+                            <h3 class="carrito__mas">+</h3>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
                 <?php else: ?>
                     <p>No hay productos en el carrito.</p>
                 <?php endif; ?>
@@ -193,6 +207,10 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/carrito.js"></script>
+    <?php
+    $successMessage = isset($successMessage) ? $successMessage : null;
+    ?>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             document.body.dataset.successMessage = <?= json_encode($successMessage); ?>;

@@ -41,6 +41,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+// Obtener el historial de compras del usuario
+$query_historial = "
+SELECT hc.id_compra, u.nombre AS cliente, p.nombre AS producto, p.imagen, hc.cantidad 
+FROM historial_compras hc 
+INNER JOIN productos p ON hc.producto = p.id_producto
+INNER JOIN usuarios u ON hc.usuario = u.id_usuario";
+
+
+$resultado_historial = mysqli_query($db, $query_historial);
+
+if (!$resultado_historial) {
+die("Error al consultar el historial de compras: " . mysqli_error($db));
+}
+
+// Crear un arreglo para almacenar los datos del historial
+$historial_compras = [];
+while ($compra = mysqli_fetch_assoc($resultado_historial)) {
+$historial_compras[] = $compra;
+}
 ?>
 
 <!DOCTYPE html>
@@ -54,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/admin.css">
+    <link rel="stylesheet" href="styles/perfil.css">
     
 </head>
 <body>
@@ -67,13 +88,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <p class="header__iconos-descripcion">Home</p>
                     </div>
                 </a>
-                <div class="header__icono" id="cartIcon">
-                    <div class="header__iconos-container">
-                        <img class="header__iconos-img" src="img/header/cart.svg" alt="Carrito">
-                        <span class="header__iconos-marcador">2</span>
-                        <p class="header__iconos-descripcion">Carrito</p>
-                    </div>
-                </div>
                 <a href="micuenta.php" class="header__icono">
                     <div class="header__iconos-container">
                         <img class="header__iconos-img" src="img/header/user.svg" alt="Perfil">
@@ -220,6 +234,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             <?php endwhile ?>
         </div>
+    </div>
+
+    <div class="historialu contenedor">
+        <h3 class="historialu__titulo">Historial de compras</h3>
+        <div class="hcompra hcompra-admin">
+            <p class="hcompra__id">ID Compra</p>
+            <p class="hcompra__id">Cliente</p>
+            <p class="hcompra__id">Imagen</p>
+            <p class="hcompra__producto">Producto</p>
+            <p class="hcompra__cantidad">Cantidad</p>
+        </div>
+
+        <?php if (count($historial_compras) > 0): ?>
+            <?php foreach ($historial_compras as $compra): ?>
+                <div class="hcompra hcompra-admin">
+                    <p class="hcompra__id"><?php echo $compra['id_compra']; ?></p>
+                    <p class="hcompra__id"><?php echo $compra['cliente']; ?></p>
+                    <img src="imagenesServidor/<?php echo $compra['imagen']; ?>" alt="Imagen del producto" class="hcompra__img">
+                    <p class="hcompra__producto"><?php echo $compra['producto']; ?></p>
+                    <p class="hcompra__cantidad"><?php echo $compra['cantidad']; ?></p>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>No hay compras registradas.</p>
+        <?php endif; ?>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

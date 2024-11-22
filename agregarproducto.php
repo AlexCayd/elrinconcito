@@ -89,13 +89,6 @@
                         <p class="header__iconos-descripcion">Home</p>
                     </div>
                 </a>
-                <div class="header__icono" id="cartIcon">
-                    <div class="header__iconos-container">
-                        <img class="header__iconos-img" src="img/header/cart.svg" alt="Carrito">
-                        <span class="header__iconos-marcador">2</span>
-                        <p class="header__iconos-descripcion">Carrito</p>
-                    </div>
-                </div>
                 <a href="micuenta.php" class="header__icono">
                     <div class="header__iconos-container">
                         <img class="header__iconos-img" src="img/header/user.svg" alt="Perfil">

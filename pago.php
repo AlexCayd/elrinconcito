@@ -12,6 +12,45 @@ if(!$auth) {
     $id_usuario = $_SESSION['id_usuario'];
 }
 
+$total = 0;
+    $productos_carrito = [];
+
+    if ($auth) {
+        // Si el usuario está autenticado, consultar el carrito
+        $id_usuario = $_SESSION['id_usuario'];
+
+        
+
+        $query_carrito = "
+        SELECT c.cantidad, p.nombre, p.precio, p.imagen, p.id_producto 
+        FROM carrito c 
+        INNER JOIN productos p ON c.producto = p.id_producto 
+        WHERE c.usuario = $id_usuario";
+    
+        $resultado_carrito = mysqli_query($db, $query_carrito);
+
+        if (!$resultado_carrito) {
+            die("Error al consultar el carrito: " . mysqli_error($db));
+        }
+
+        while ($producto = mysqli_fetch_assoc($resultado_carrito)) {
+            $productos_carrito[] = $producto;
+            $total += $producto['precio'] * $producto['cantidad'];
+        }
+    }
+
+    $total_items = 0;
+
+    if ($auth) {
+        $query_total_items = "SELECT SUM(cantidad) AS total_items FROM carrito WHERE usuario = $id_usuario";
+        $resultado_total_items = mysqli_query($db, $query_total_items);
+
+        if ($resultado_total_items) {
+            $row = mysqli_fetch_assoc($resultado_total_items);
+            $total_items = $row['total_items'] ?? 0;
+        }
+    }
+
 // Consultar los productos del carrito
 $query_carrito = "
     SELECT 
@@ -48,7 +87,7 @@ if (!$resultado_carrito) {
     <link rel="stylesheet" href="styles/pago.css">
 </head>
 <body>
-    <header class="header">
+<header class="header">
         <div class="header__contenedor">
             <h2 class="header__logo">El Rinconcito</h2>
             <div class="header__iconos">
@@ -61,16 +100,27 @@ if (!$resultado_carrito) {
                 <div class="header__icono" id="cartIcon">
                     <div class="header__iconos-container">
                         <img class="header__iconos-img" src="img/header/cart.svg" alt="Carrito">
-                        <span class="header__iconos-marcador">2</span>
+                        <span class="header__iconos-marcador"><?php echo $total_items; ?></span>
                         <p class="header__iconos-descripcion">Carrito</p>
                     </div>
                 </div>
-                <a href="micuenta.php" class="header__icono">
-                    <div class="header__iconos-container">
-                        <img class="header__iconos-img" src="img/header/user.svg" alt="Perfil">
-                        <p class="header__iconos-descripcion">Mi Cuenta</p>
-                    </div>
-                </a>
+                <?php 
+                    if (!$auth) {
+                        echo '<a href="micuenta.php" class="header__icono">
+                                <div class="header__iconos-container">
+                                    <img class="header__iconos-img" src="img/header/user.svg" alt="Perfil">
+                                    <p class="header__iconos-descripcion">Iniciar Sesión</p>
+                                </div>
+                            </a>';
+                    } else {
+                        echo '<a href="perfil.php" class="header__icono">
+                                <div class="header__iconos-container">
+                                    <img class="header__iconos-img" src="img/header/user.svg" alt="Perfil">
+                                    <p class="header__iconos-descripcion">Mi Perfil</p>
+                                </div>
+                            </a>';
+                    }
+                ?>
             </div>
         </div>
     </header>
@@ -82,65 +132,40 @@ if (!$resultado_carrito) {
                 <button class="sidebar__close" id="closeSidebar">x</button>
             </div>
             <div class="carrito__productos">
-                <div class="carrito__producto">
-                    <img src="img/productos/vino1.webp" alt="Imagen en el carrito" class="carrito__imagen">
+                <?php if (count($productos_carrito) > 0): ?>
+                    <?php foreach ($productos_carrito as $producto): ?>
+                    <div class="carrito__producto" data-id="<?php echo $producto['id_producto']; ?>">
+                    <img src="imagenesServidor/<?php echo $producto['imagen']; ?>" alt="Imagen del producto" class="carrito__imagen">
                     <div class="carrito__contenido">
                         <div class="carrito__texto">
-                            <h3 class="carrito__titulo">Vino Tinto Cabernet Sauvignon (Reserva)</h3>
-                            <h3 class="carrito__precio">$999.00</h3>
+                            <h3 class="carrito__titulo"><?php echo $producto['nombre']; ?></h3>
+                            <h3 class="carrito__precio">$<?php echo number_format($producto['precio'], 2); ?></h3>
                         </div>
-                        
                         <div class="carrito__controlador">
                             <h3 class="carrito__menos">-</h3>
-                            <h3 class="carrito__cantidad">1</h3>
+                            <h3 class="carrito__cantidad"><?php echo $producto['cantidad']; ?></h3>
                             <h3 class="carrito__mas">+</h3>
                         </div>
                     </div>
                 </div>
-
-                <div class="carrito__producto">
-                    <img src="img/productos/aceite1.webp" alt="Imagen en el carrito" class="carrito__imagen">
-                    <div class="carrito__contenido">
-                        <div class="carrito__texto">
-                            <h3 class="carrito__titulo">Aceite de Oliva Extra Virgen Italiano</h3>
-                            <h3 class="carrito__precio">$389.00</h3>
-                        </div>
-                        
-                        <div class="carrito__controlador">
-                            <h3 class="carrito__menos">-</h3>
-                            <h3 class="carrito__cantidad">2</h3>
-                            <h3 class="carrito__mas">+</h3>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="carrito__producto">
-                    <img src="img/productos/carne1.webp" alt="Imagen en el carrito" class="carrito__imagen">
-                    <div class="carrito__contenido">
-                        <div class="carrito__texto">
-                            <h3 class="carrito__titulo">Jamón Ibérico de Bellota</h3>
-                            <h3 class="carrito__precio">$649.00</h3>
-                        </div>
-                        
-                        <div class="carrito__controlador">
-                            <h3 class="carrito__menos">-</h3>
-                            <h3 class="carrito__cantidad">1</h3>
-                            <h3 class="carrito__mas">+</h3>
-                        </div>
-                    </div>
-                </div>
+                <?php endforeach; ?>
+                <?php else: ?>
+                    <p>No hay productos en el carrito.</p>
+                <?php endif; ?>
             </div>
-            
-            <h2 class="carrito__total">Total: <span class="carrito__total-num">$1699.00</span> </h2>
-            <a href="pago.php" class="carrito__pago">Continuar al pago</a>
-            <a href="#" id="vaciar-carrito" class="carrito__vaciar">Vaciar Carrito</a>
+            <h2 class="carrito__total">Total: <span class="carrito__total-num">$<?php echo number_format($total, 2); ?></span></h2>
+            <div class="confirmacion__boton">
+                <a href="pago.php" class="carrito__pago">Continuar al pago</a>
+            </div>
+
+            <a href="vaciar_carrito.php" id="vaciar-carrito" class="carrito__vaciar">Vaciar Carrito</a>
         </div>
     </div>
 
     <main class="pago contenedor">
         <h2 class="pago__titulo">Resumen</h2>
 
-        <h3 class="total">Total: <span class="total__num">$2426.00</span> </h3>
+        <h3 class="total">Total: <span class="total__num">$<?php echo number_format($total, 2); ?></span> </h3>
         <div class="pago__contenedor">
         <table class="resumen">
             <thead class="resumen__encabezado">
@@ -182,7 +207,7 @@ if (!$resultado_carrito) {
                     </div>
                 </div>
                 <div class="confirmacion__boton">
-                    <a href="#" class="confirmacion__confirmar">Confirmar pedido</a>
+                    <a href="confirmar_pedido.php" class="confirmacion__confirmar">Confirmar pedido</a>
                 </div>
             </div>
         </div>
