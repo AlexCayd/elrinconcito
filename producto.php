@@ -86,6 +86,7 @@
                         <p class="header__iconos-descripcion">Home</p>
                     </div>
                 </a>
+                <!-- 
                 <div class="header__icono" id="cartIcon">
                     <div class="header__iconos-container">
                         <img class="header__iconos-img" src="img/header/cart.svg" alt="Carrito">
@@ -93,6 +94,7 @@
                         <p class="header__iconos-descripcion">Carrito</p>
                     </div>
                 </div>
+                -->
                 <?php 
                     if (!$auth) {
                         echo '<a href="micuenta.php" class="header__icono">

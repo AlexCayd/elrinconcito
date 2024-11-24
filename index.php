@@ -12,11 +12,40 @@
 
     $total = 0;
     $productos_carrito = [];
+    $total_items = 0;
 
     if ($auth) {
-        $carrito = obtenerCarrito($_SESSION['id_usuario'], $db);
-        $total_items = $carrito['total_items'];
-        $productos_carrito = $carrito['productos_carrito'];
+        // Si el usuario está autenticado, consultar el carrito
+        $id_usuario = $_SESSION['id_usuario'];
+
+        $query_carrito = "
+        SELECT c.cantidad, p.nombre, p.precio, p.imagen, p.id_producto 
+        FROM carrito c 
+        INNER JOIN productos p ON c.producto = p.id_producto 
+        WHERE c.usuario = $id_usuario";
+    
+        $resultado_carrito = mysqli_query($db, $query_carrito);
+
+        if (!$resultado_carrito) {
+            die("Error al consultar el carrito: " . mysqli_error($db));
+        }
+
+        while ($producto = mysqli_fetch_assoc($resultado_carrito)) {
+            $productos_carrito[] = $producto;
+            $total += $producto['precio'] * $producto['cantidad'];
+        }
+    }
+
+    $total_items = 0;
+
+    if ($auth) {
+        $query_total_items = "SELECT SUM(cantidad) AS total_items FROM carrito WHERE usuario = $id_usuario";
+        $resultado_total_items = mysqli_query($db, $query_total_items);
+
+        if ($resultado_total_items) {
+            $row = mysqli_fetch_assoc($resultado_total_items);
+            $total_items = $row['total_items'] ?? 0;
+        }
     }
     
 ?>
