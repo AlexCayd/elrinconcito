@@ -89,13 +89,6 @@
                         <p class="header__iconos-descripcion">Home</p>
                     </div>
                 </a>
-                <div class="header__icono" id="cartIcon">
-                    <div class="header__iconos-container">
-                        <img class="header__iconos-img" src="img/header/cart.svg" alt="Carrito">
-                        <span class="header__iconos-marcador"><?php echo $total_items; ?></span>
-                        <p class="header__iconos-descripcion">Carrito</p>
-                    </div>
-                </div>
                 <?php 
                     if (!$auth) {
                         echo '<a href="micuenta.php" class="header__icono">
@@ -173,6 +166,10 @@
     </main>
 
     <footer class="footer">
+        <div class="footer__contacto">
+            <p class="footer__texto">Teléfono (+52) 55 5142 8751</p>
+            <p class="footer__texto">Email elrinconcito@elrinconcito.com</p>
+        </div>
         <p class="footer__descripcion">El Rinconcito &copy;. Todos los derechos reservados 2024</p>
     </footer>
 

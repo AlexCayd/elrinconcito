@@ -202,6 +202,10 @@
 
 
     <footer class="footer">
+        <div class="footer__contacto">
+            <p class="footer__texto">Teléfono (+52) 55 5142 8751</p>
+            <p class="footer__texto">Email elrinconcito@elrinconcito.com</p>
+        </div>
         <p class="footer__descripcion">El Rinconcito &copy;. Todos los derechos reservados 2024</p>
     </footer>
 

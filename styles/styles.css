@@ -563,9 +563,26 @@ button {
 
 /* FOOTER */
 .footer {
-    padding: 10px;
+    padding: 15px;
     text-align: center;
     background-color: var(--colorPrimario);
+}
+
+.footer__contacto {
+    color: var(--colorSecundario);
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.footer__texto {
+    color: var(--colorSecundario);
+}
+
+@media screen and (min-width: 768px) {
+  .footer__contacto {
+    flex-direction: row;
+  }
 }
 
 .footer__descripcion {
@@ -622,4 +639,20 @@ button {
         border-radius: 0;
         text-align: center;
     }
+}
+
+.footer__contacto {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    gap: 15px;
+    justify-content: space-between;
+    color: var(--colorSecundario);
+    padding: 5px;
+}
+
+@media screen and (min-width: 768px) {
+  .footer__contacto {
+    flex-direction: row;
+  }
 }
