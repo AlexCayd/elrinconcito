@@ -4,7 +4,7 @@
 
     // Verificar si el usuario está autenticado
     $auth = $_SESSION['auth'] ?? false;
-
+    
     // Importar la conexión
     require './includes/config/database.php';
     $db = conectarDB();
@@ -27,6 +27,7 @@
 
     $producto = mysqli_fetch_assoc($resultado);
 
+    $total_items = 0;
     $total = 0;
     $productos_carrito = [];
 
@@ -39,22 +40,17 @@
         FROM carrito c 
         INNER JOIN productos p ON c.producto = p.id_producto 
         WHERE c.usuario = $id_usuario";
-
+        
         $resultado_carrito = mysqli_query($db, $query_carrito);
 
-        if (!$resultado_carrito) {
-            die("Error al consultar el carrito: " . mysqli_error($db));
+        if ($resultado_carrito) {
+            while ($producto = mysqli_fetch_assoc($resultado_carrito)) {
+                $productos_carrito[] = $producto;
+                $total += $producto['precio'] * $producto['cantidad'];
+            }
         }
 
-        while ($producto_carrito = mysqli_fetch_assoc($resultado_carrito)) {
-            $productos_carrito[] = $producto_carrito;
-            $total += $producto_carrito['precio'] * $producto_carrito['cantidad'];
-        }
-    }
-
-    $total_items = 0;
-
-    if ($auth) {
+        // Calcular el total de items en el carrito
         $query_total_items = "SELECT SUM(cantidad) AS total_items FROM carrito WHERE usuario = $id_usuario";
         $resultado_total_items = mysqli_query($db, $query_total_items);
 
@@ -63,6 +59,7 @@
             $total_items = $row['total_items'] ?? 0;
         }
     }
+
 ?>
 
 
@@ -89,6 +86,13 @@
                         <p class="header__iconos-descripcion">Home</p>
                     </div>
                 </a>
+                <div class="header__icono" id="cartIcon">
+                    <div class="header__iconos-container">
+                        <img class="header__iconos-img" src="img/header/cart.svg" alt="Carrito">
+                        <span class="header__iconos-marcador"><?php echo $total_items; ?></span>
+                        <p class="header__iconos-descripcion">Carrito</p>
+                    </div>
+                </div>
                 <?php 
                     if (!$auth) {
                         echo '<a href="micuenta.php" class="header__icono">

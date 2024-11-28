@@ -12,6 +12,7 @@
 
     $total = 0;
     $productos_carrito = [];
+    $total_items = 0;
 
     if ($auth) {
         // Si el usuario está autenticado, consultar el carrito
@@ -46,7 +47,7 @@
             $total_items = $row['total_items'] ?? 0;
         }
     }
-
+    
 ?>
 
 <!DOCTYPE html>
